@@ -7,7 +7,7 @@ from utils import format_solution
 def main():
     log_dir = './logs/set2_nofu'
     os.makedirs(log_dir, exist_ok=True)
-    taus = [10, 20, 30]
+    taus = range(10, 200+1, 10)
     data = tbpp_caf.data.format2.read_all('./data/set2', taus)
     for group in data:
         print(group['tau'])
