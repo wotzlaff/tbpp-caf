@@ -8,8 +8,7 @@ The method in this repository implements the model of a combinatorial flow-based
 
 ## Examples
 
-You can find basic example files in the `examples` directory.
-Results for the benchmark instances can be computed using the scripts `solve_set*.py`.
+Results for the benchmark instances can be computed using the script `solve_benchmarks.py` specifying a subset of instances (`a1`, `a2`, `b1`, `b2`) and a problem setting (`without_fu` or `with_fu`).
 
 ## Installation
 
