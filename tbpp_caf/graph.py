@@ -78,8 +78,6 @@ def generate_graph(inst: Instance):
     initial_arcs: list[Arc] = list()
     fu_arcs: list[Arc] = list()
 
-    no_fu = not hasattr(inst, 'gamma') or inst.gamma == 0.0
-
     for k, (mc0, mc1) in enumerate(pairwise(mcs)):
         for state in iterate_feasible_subsets(inst.c, mc0 & mc1, inst.cap):
             nodes.append(Node(k, frozenset(state), 'O'))
@@ -115,8 +113,6 @@ def generate_graph(inst: Instance):
             # o-arc
             _add_arc(k, state, 'o')
 
-            if no_fu:
-                continue
             # a-arcs
             max_e = max((inst.e[i] for i in state), default=None)
             act_right = k < m and max_e == clique_s[k+1]
