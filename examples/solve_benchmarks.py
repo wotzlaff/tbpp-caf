@@ -24,8 +24,8 @@ def main():
     if len(sys.argv) != 3:
         raise ValueError('expected exactly two args')
     bench_set = sys.argv[1]
-    if bench_set not in ['a', 'b']:
-        raise ValueError('first arg should be "a" or "b"')
+    if bench_set not in ['a1', 'a2', 'b1', 'b2']:
+        raise ValueError('first arg should be in ["a1", "a2", "b1", "b2"]')
     ver = sys.argv[2]
     if ver not in ['without_fu', 'with_fu']:
         raise ValueError('second arg should be "without_fu" or "with_fu"')
@@ -33,14 +33,14 @@ def main():
     log_dir = f'./logs/set_{bench_set}_{ver}'
     os.makedirs(log_dir, exist_ok=True)
     data = read_benchmarks(f'./data/{bench_set}')
-    data.sort(key=sort_groups[bench_set])
+    data.sort(key=sort_groups[bench_set[0]])
     for group in data:
         print(group['name'])
         csv_path = os.path.join(log_dir, group['name'] + '.csv')
         sol_path = os.path.join(log_dir, group['name'] + '.sol')
         with open(csv_path, 'w') as fh_csv, open(sol_path, 'w') as fh_sol:
             fh_csv.write(method.format_header() + '\n')
-            for inst in sorted(group['instances'], key=sort_instances[bench_set]):
+            for inst in sorted(group['instances'], key=sort_instances[bench_set[0]]):
                 res = method.solve(inst)
                 fh_csv.write(method.format_result(res) + '\n')
                 fh_sol.write(f'{inst.name}:' + format_solution(res['sol']))
