@@ -3,7 +3,7 @@ import os
 import numpy as np
 from ..instance import Instance
 
-__all__ = ['read', 'get_groups', 'read_instances']
+__all__ = ['read', 'read_all']
 
 
 def read(filename):
@@ -22,15 +22,13 @@ def read_all(data_dir):
     for group_path in sorted(glob.glob(os.path.join(data_dir, '*'))):
         group_name = os.path.basename(group_path)
         tmp = group_name.split(' ')
+        filenames = sorted(glob.glob(os.path.join(group_path, '*.txt')))
         group = dict(
             name=group_name,
             n=int(tmp[0][1:]),
             t=int(tmp[1][1:]),
             cls=tmp[2],
-            instances=(
-                read(filename)
-                for filename in sorted(glob.glob(os.path.join(group_path, '*.txt')))
-            ),
+            instances=(read(filename) for filename in filenames),
         )
         groups.append(group)
     return groups
