@@ -10,10 +10,10 @@ def pairwise(iterable):
     return zip(a, b)
 
 
-def get_cliques(s: list[int], e: list[int], offset: int = 0):
+def get_cliques(s: list[int], e: list[int]):
     n = len(s)
-    tss = set(s[offset:])
-    tes = set(e[offset:])
+    tss = set(s)
+    tes = set(e)
     ts = sorted(tss | tes)
     ndts = [
         t0
@@ -21,7 +21,7 @@ def get_cliques(s: list[int], e: list[int], offset: int = 0):
         if t0 in tss and t1 in tes
     ]
     return [
-        {i for i in range(offset, n) if s[i] <= t and t < e[i]}
+        {i for i in range(n) if s[i] <= t and t < e[i]}
         for t in ndts
     ]
 

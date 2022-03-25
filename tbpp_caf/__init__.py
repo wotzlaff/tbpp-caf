@@ -1,5 +1,5 @@
 from .caf import build
 from .extract import extract
-from . import data
+from .instance import Instance
 
-__all__ = ['build', 'data', 'extract']
+__all__ = ['build', 'extract', 'Instance']
