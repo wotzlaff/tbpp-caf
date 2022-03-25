@@ -12,7 +12,7 @@ def read(filename):
     s = raw[1:, 1].tolist()
     e = raw[1:, 2].tolist()
     c = raw[1:, 3].tolist()
-    inst = Instance(s=s, e=e, c=c, cap=cap, gamma=0.0)
+    inst = Instance(s=s, e=e, c=c, cap=cap)
     inst.name = os.path.splitext(os.path.basename(filename))[0]
     return inst
 

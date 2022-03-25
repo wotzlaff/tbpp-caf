@@ -6,7 +6,7 @@ from .graph import generate_graph
 __all__ = ['build', 'extract_solution']
 
 
-def build(inst: Instance, lb_servers: int = 0):
+def build(inst: Instance):
     graph = generate_graph(inst)
 
     model = gp.Model()
@@ -29,19 +29,27 @@ def build(inst: Instance, lb_servers: int = 0):
     servers = gp.quicksum(x[arc] for arc in graph.initial_arcs)
     model._servers = servers
 
-    no_fu = not hasattr(inst, 'gamma') or inst.gamma == 0.0
-    if no_fu:
-        obj = servers
-        if lb_servers > 0:
-            model.addConstr(servers >= lb_servers, name='lb_servers')
-    else:
-        fireups = gp.quicksum(x[arc] for arc in graph.fu_arcs)
-        model._fireups = fireups
-        obj = servers + inst.gamma * fireups
-        if lb_servers > 0:
-            model.addConstr(servers >= lb_servers, name='lb_servers')
-            model.addConstr(fireups >= lb_servers, name='lb_fireups')
+    def _update_gamma(gamma):
+        model._gamma = gamma
+        if gamma == 0.0:
+            obj = servers
+        else:
+            fireups = gp.quicksum(x[arc] for arc in graph.fu_arcs)
+            model._fireups = fireups
+            obj = servers + gamma * fireups
+        model.setObjective(obj, gp.GRB.MINIMIZE)
 
-    model.setObjective(obj, gp.GRB.MINIMIZE)
+    _update_gamma(0.0)
+    model._update_gamma = _update_gamma
+
+    def _add_lb_servers(lb):
+        if model._gamma == 0.0:
+            model.addConstr(servers >= lb, name='lb_servers')
+        else:
+            fireups = gp.quicksum(x[arc] for arc in graph.fu_arcs)
+            model.addConstr(servers >= lb, name='lb_servers')
+            model.addConstr(fireups >= lb, name='lb_fireups')
+
+    model._add_lb_servers = _add_lb_servers
 
     return model

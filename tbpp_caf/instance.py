@@ -14,7 +14,6 @@ class Instance:
     e: list[int]
     c: list[int]
     cap: int
-    gamma: float
 
     @property
     def n(self) -> int:
@@ -22,7 +21,7 @@ class Instance:
 
     def sorted(self):
         s, e, c = [list(t) for t in zip(*sorted(zip(self.s, self.e, self.c)))]
-        return Instance(s, e, c, self.cap, self.gamma)
+        return Instance(s, e, c, self.cap)
 
     def is_feasible(self, alloc: Allocation):
         for pat in alloc:
@@ -37,14 +36,3 @@ class Instance:
             for i in range(self.n)
         )
         return at_most_once and at_least_once
-
-    def compute_value(self, alloc: Allocation) -> float:
-        fireups = 0
-        for pat in alloc:
-            last_e = float('-inf')
-            for j in sorted(pat):
-                if self.s[j] > last_e:
-                    fireups += 1
-                last_e = max(last_e, self.e[j])
-        servers = len(alloc)
-        return servers + self.gamma * fireups
