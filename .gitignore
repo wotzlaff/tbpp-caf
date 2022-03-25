@@ -20,5 +20,5 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-data/
-logs/
+/data
+/logs
