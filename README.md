@@ -35,8 +35,8 @@ to setup a link to the `tbpp_caf` package such that it can be loaded easily.
 
 ## Data of Benchmark Instances
 
-The data for the benchmark instances can be found [here](https://github.com/sibirbil/TemporalBinPacking).
-After cloning this repository move the instance directory to `data/set1` or create a symbolic link.
+The data for the benchmark instances can be found [here](https://github.com/wotzlaff/tbpp-instances).
+After cloning this repository move the data directory to `data` or create a symbolic link.
 
 ## References
 
