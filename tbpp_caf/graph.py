@@ -3,7 +3,7 @@ import dataclasses
 from .utils import pairwise, get_cliques, iterate_feasible_subsets
 from .instance import Instance, Allocation
 
-__all__ = ['Node', 'Arc', 'State', 'generate_graph']
+__all__ = ['Node', 'Arc', 'State', 'generate_graph', 'generate_pattern_graph']
 
 
 @dataclasses.dataclass(frozen=True)

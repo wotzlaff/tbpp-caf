@@ -1,11 +1,11 @@
 import gurobipy as gp
 
 from .instance import Instance, Allocation
-from .graph import Graph, generate_graph
+from .graph import Graph, generate_graph, generate_pattern_graph
 from .start import set_start
 
 
-__all__ = ['build', 'build_from_graph']
+__all__ = ['build', 'build_from_graph', 'build_from_patterns']
 
 
 def build_from_graph(inst: Instance, graph: Graph):
@@ -60,4 +60,9 @@ def build_from_graph(inst: Instance, graph: Graph):
 
 def build(inst: Instance):
     graph = generate_graph(inst)
+    return build_from_graph(inst, graph)
+
+
+def build_from_patterns(inst: Instance, patterns: Allocation):
+    graph = generate_pattern_graph(inst, patterns)
     return build_from_graph(inst, graph)

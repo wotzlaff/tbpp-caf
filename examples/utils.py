@@ -2,7 +2,7 @@ import glob
 import os
 from tbpp_caf import Instance
 
-__all__ = ['format_solution', 'read_benchmarks']
+__all__ = ['format_solution', 'parse_solution', 'read_benchmarks']
 
 
 def format_solution(sol):
@@ -10,6 +10,13 @@ def format_solution(sol):
         '{' + ','.join(f'{j+1}' for j in alloc) + '}'
         for alloc in sol
     ]) + '\n'
+
+
+def parse_solution(dat):
+    return [
+        frozenset(int(j)-1 for j in part[1:-1].split(','))
+        for part in dat.split(';')
+    ]
 
 
 def read_benchmarks(data_dir):

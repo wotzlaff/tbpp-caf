@@ -7,16 +7,18 @@ __all__ = ['solve', 'format_result', 'format_header']
 
 def format_header():
     return ','.join([
-        'name', 'v',
-        'nv', 'nc', 'nnz',
-        'time_model', 'time_solve', 'time_extract',
+        'name', 'v_cg', 'v',
+        'patterns',
+        'time_cg', 'time_model', 'time_ip', 'time_extract',
     ])
 
 
 def format_result(res):
     return ','.join([
-        f'{res["name"]},{res["v"]}',
-        f'{res["nv"]},{res["nc"]},{res["nnz"]}',
+        res['name'],
+        str(res['v_cg']),
+        str(res['v']),
+        str(len(res['sol'])),
         *(f'{t:.3f}' for t in res['times']),
     ])
 
@@ -25,8 +27,10 @@ def solve(inst):
     ts = []
     ts.append(time.time())
 
-    # create model
-    model = tbpp_caf.build(inst)
+    cg_res = tbpp_caf.colgen.solve(inst)
+    ts.append(time.time())
+
+    model = tbpp_caf.caf.build_from_patterns(inst, cg_res['patterns'])
     model.setParam('OutputFlag', 0)
     model.setParam('Method', 3)
     model.update()
@@ -39,15 +43,12 @@ def solve(inst):
     v = round(model.ObjVal)
     ts.append(time.time())
 
-    # extract solution
     sol = tbpp_caf.extract(model)
-    assert len(sol) == v
     ts.append(time.time())
 
     return dict(
         name=inst.name,
-        v=v,
-        nv=model.NumVars, nc=model.NumConstrs, nnz=model.NumNZs,
-        sol=sol,
+        v_cg=cg_res['value'],
+        v=v, sol=sol,
         times=[t1 - t0 for t0, t1 in zip(ts, ts[1:])],
     )

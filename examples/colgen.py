@@ -5,11 +5,16 @@ __all__ = ['solve', 'format_result', 'format_header']
 
 
 def format_header():
-    return ','.join(['name', 'value', 'time', 'patterns'])
+    return ','.join(['name', 'v', 'patterns', 'time'])
 
 
 def format_result(res):
-    return ','.join([res['name'], str(res['value']), str(res['time'])])
+    return ','.join([
+        res['name'],
+        str(res['value']),
+        str(len(res['sol'])),
+        str(res['time']),
+    ])
 
 
 def solve(inst):
