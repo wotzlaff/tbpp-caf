@@ -40,7 +40,7 @@ def solve(inst):
     model.optimize()
     if model.Status != gp.GRB.OPTIMAL:
         return
-    v = round(model.ObjVal)
+    v = model.ObjVal
     ts.append(time.time())
 
     sol = tbpp_caf.extract(model)
