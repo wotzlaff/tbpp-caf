@@ -5,7 +5,7 @@ from .graph import Graph, generate_graph
 from .start import set_start
 
 
-__all__ = ['build', 'extract_solution']
+__all__ = ['build', 'build_from_graph']
 
 
 def build_from_graph(inst: Instance, graph: Graph):
@@ -39,7 +39,7 @@ def build_from_graph(inst: Instance, graph: Graph):
             obj = servers + gamma * fireups
         model.setObjective(obj, gp.GRB.MINIMIZE)
     model._update_gamma = _update_gamma
-    _update_gamma(0.0)
+    _update_gamma(inst.gamma)
 
     def _add_lb_servers(lb):
         if model._gamma == 0.0:

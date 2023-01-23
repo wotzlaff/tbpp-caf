@@ -15,6 +15,7 @@ class Instance:
     e: list[int]
     c: list[int]
     cap: int
+    gamma: float = 0.0
 
     @property
     def n(self) -> int:
@@ -40,6 +41,19 @@ class Instance:
             for i in range(self.n)
         )
         return at_most_once and at_least_once
+
+    def compute_value(self, alloc: Allocation) -> float:
+        n_servers = len(alloc)
+        if self.gamma == 0.0:
+            return n_servers
+        n_fireups = 0
+        for pat in alloc:
+            last_e = float('-inf')
+            for j in sorted(pat):
+                if self.s[j] > last_e:
+                    n_fireups += 1
+                last_e = max(last_e, self.e[j])
+        return n_servers + self.gamma * n_fireups
 
     @staticmethod
     def from_file(filename):
