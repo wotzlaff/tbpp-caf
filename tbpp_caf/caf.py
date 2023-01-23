@@ -55,6 +55,25 @@ def build_from_graph(inst: Instance, graph: Graph):
         set_start(model, pats)
     model._set_start = _set_start
 
+    def _relax():
+        model.update()
+        model_rel = model.relax()
+        model_rel._inst = inst
+        model_rel._graph = graph
+        model_rel._arcs = graph.arcs
+        model_rel._nodes = graph.nodes
+        model_rel._fu_arcs = graph.fu_arcs
+        x_rel = gp.tupledict({
+            arc: model_rel.getVarByName('x[' + ','.join(str(v) for v in arc) + ']')
+            for arc in graph.arcs
+        })
+        model_rel._servers = gp.quicksum(x_rel[arc] for arc in graph.initial_arcs)
+        model_rel._x = x_rel
+        if hasattr(model, '_fireups'):
+            model_rel._fireups = gp.quicksum(x_rel[arc] for arc in graph.fu_arcs)
+        return model_rel
+    model._relax = _relax
+
     return model
 
 

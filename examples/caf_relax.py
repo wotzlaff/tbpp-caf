@@ -33,7 +33,7 @@ def solve(inst):
     ts.append(time.time())
 
     # solve integer model
-    model = model.relax()
+    model = model._relax()
     model.optimize()
     if model.Status != gp.GRB.OPTIMAL:
         return
@@ -42,7 +42,6 @@ def solve(inst):
 
     # extract solution
     sol = tbpp_caf.extract(model)
-    assert len(sol) == v
     ts.append(time.time())
 
     return dict(
