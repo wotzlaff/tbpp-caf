@@ -1,7 +1,9 @@
 import os
 import sys
+from functools import partial
 import without_fu
 import with_fu
+import colgen
 from utils import format_solution, read_benchmarks
 
 
@@ -21,16 +23,23 @@ sort_instances = dict(
 
 
 def main():
-    if len(sys.argv) != 3:
-        raise ValueError('expected exactly two args')
+    if len(sys.argv) < 3:
+        raise ValueError('expected three args (bench_set, method, gamma)')
     bench_set = sys.argv[1]
     if bench_set not in ['a1', 'a2', 'b1', 'b2']:
         raise ValueError('first arg should be in ["a1", "a2", "b1", "b2"]')
     ver = sys.argv[2]
-    if ver not in ['without_fu', 'with_fu']:
-        raise ValueError('second arg should be "without_fu" or "with_fu"')
-    method = dict(without_fu=without_fu, with_fu=with_fu)[ver]
-    log_dir = f'./logs/set_{bench_set}_{ver}'
+    methods = dict(
+        without_fu=without_fu,
+        with_fu=with_fu,
+        colgen=colgen,
+    )
+    if ver not in methods.keys():
+        raise ValueError('second arg should be in ' + str(methods.keys()))
+    method = methods[ver]
+    gamma = float(sys.argv[3]) if len(sys.argv) > 3 else 0.0
+
+    log_dir = f'./logs/set_{bench_set}_{ver}_{gamma}'
     os.makedirs(log_dir, exist_ok=True)
     data = read_benchmarks(f'./data/{bench_set}')
     data.sort(key=sort_groups[bench_set[0]])
@@ -41,6 +50,7 @@ def main():
         with open(csv_path, 'w') as fh_csv, open(sol_path, 'w') as fh_sol:
             fh_csv.write(method.format_header() + '\n')
             for inst in sorted(group['instances'], key=sort_instances[bench_set[0]]):
+                inst.gamma = gamma
                 res = method.solve(inst)
                 fh_csv.write(method.format_result(res) + '\n')
                 fh_sol.write(f'{inst.name}:' + format_solution(res['sol']))

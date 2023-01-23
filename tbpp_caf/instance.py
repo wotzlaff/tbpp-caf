@@ -1,6 +1,8 @@
 import dataclasses
 import os
+from functools import cached_property
 from typing import Collection
+from .utils import get_cliques
 
 __all__ = ['Instance']
 
@@ -69,3 +71,7 @@ class Instance:
             inst = Instance(s=s, e=e, c=c, cap=cap)
             inst.name = os.path.splitext(os.path.basename(filename))[0]
             return inst
+
+    @cached_property
+    def cliques(self):
+        return get_cliques(self.s, self.e)
