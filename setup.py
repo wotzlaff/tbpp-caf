@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='tbpp_caf',
-    version='0.0.1',
+    version='0.0.2',
     author='Nico Strasdat',
     author_email='nstrasdat@gmail.com',
     description='Combinatorial Arcflow Model for the Temporal Bin Packing Problem with Fire-Ups',

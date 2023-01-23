@@ -1,7 +1,7 @@
 import collections
 import dataclasses
 from .utils import pairwise, get_cliques, iterate_feasible_subsets
-from .instance import Instance
+from .instance import Instance, Allocation
 
 __all__ = ['Node', 'Arc', 'State', 'generate_graph']
 
@@ -55,7 +55,7 @@ class Graph:
     mcs: list[set[int]]
 
 
-def generate_graph(inst: Instance):
+def generate_generic_graph(inst: Instance, iterate_subsets):
     mcs = get_cliques(inst.s, inst.e)
 
     m = len(mcs)
@@ -79,7 +79,7 @@ def generate_graph(inst: Instance):
     fu_arcs: list[Arc] = list()
 
     for k, (mc0, mc1) in enumerate(pairwise(mcs)):
-        for state in iterate_feasible_subsets(inst.c, mc0 & mc1, inst.cap):
+        for state in iterate_subsets(mc0 & mc1):
             nodes.append(Node(k, frozenset(state), 'O'))
     for k in range(1, m):
         if clique_e[k] == clique_s[k+1]:
@@ -88,7 +88,7 @@ def generate_graph(inst: Instance):
     for k, mc in enumerate(mcs[1:-1], start=1):
         sing = mc - mcs[k-1]
 
-        for state in iterate_feasible_subsets(inst.c, mc, inst.cap):
+        for state in iterate_subsets(mc):
             state = frozenset(state)
 
             def _add_arc(k, state, tag):
@@ -127,3 +127,17 @@ def generate_graph(inst: Instance):
                 _add_arc(k, state, '<->')
 
     return Graph(arcs, nodes, starting_arcs, initial_arcs, fu_arcs, mcs)
+
+
+def generate_pattern_graph(inst: Instance, pats: Allocation):
+    return generate_generic_graph(
+        inst,
+        lambda ss: {pat & ss for pat in pats}
+    )
+
+
+def generate_graph(inst: Instance):
+    return generate_generic_graph(
+        inst,
+        lambda ss: iterate_feasible_subsets(inst.c, ss, inst.cap)
+    )

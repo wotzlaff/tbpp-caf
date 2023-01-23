@@ -1,14 +1,14 @@
 import gurobipy as gp
 
-from .instance import Instance
-from .graph import generate_graph
+from .instance import Instance, Allocation
+from .graph import Graph, generate_graph
+from .start import set_start
+
 
 __all__ = ['build', 'extract_solution']
 
 
-def build(inst: Instance):
-    graph = generate_graph(inst)
-
+def build_from_graph(inst: Instance, graph: Graph):
     model = gp.Model()
     model._inst = inst
     model._graph = graph
@@ -38,9 +38,8 @@ def build(inst: Instance):
             model._fireups = fireups
             obj = servers + gamma * fireups
         model.setObjective(obj, gp.GRB.MINIMIZE)
-
-    _update_gamma(0.0)
     model._update_gamma = _update_gamma
+    _update_gamma(0.0)
 
     def _add_lb_servers(lb):
         if model._gamma == 0.0:
@@ -49,7 +48,16 @@ def build(inst: Instance):
             fireups = gp.quicksum(x[arc] for arc in graph.fu_arcs)
             model.addConstr(servers >= lb, name='lb_servers')
             model.addConstr(fireups >= lb, name='lb_fireups')
-
     model._add_lb_servers = _add_lb_servers
 
+    def _set_start(pats: Allocation):
+        model.update()
+        set_start(model, pats)
+    model._set_start = _set_start
+
     return model
+
+
+def build(inst: Instance):
+    graph = generate_graph(inst)
+    return build_from_graph(inst, graph)
