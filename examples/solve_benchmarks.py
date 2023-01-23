@@ -1,6 +1,5 @@
 import os
 import sys
-from functools import partial
 import without_fu
 import with_fu
 import colgen
