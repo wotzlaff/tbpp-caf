@@ -18,7 +18,7 @@ def format_result(res):
         res['name'],
         str(res['v_cg']),
         str(res['v']),
-        str(len(res['sol'])),
+        str(len(res['patterns'])),
         *(f'{t:.3f}' for t in res['times']),
     ])
 
@@ -49,6 +49,7 @@ def solve(inst):
     return dict(
         name=inst.name,
         v_cg=cg_res['value'],
+        patterns=cg_res['patterns'],
         v=v, sol=sol,
         times=[t1 - t0 for t0, t1 in zip(ts, ts[1:])],
     )
