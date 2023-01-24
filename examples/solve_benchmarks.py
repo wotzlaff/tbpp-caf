@@ -67,7 +67,9 @@ def main():
                 inst.gamma = gamma_fun(inst)
                 res = method.solve(inst)
                 fh_csv.write(method.format_result(res) + '\n')
+                fh_csv.flush()
                 fh_sol.write(f'{inst.name}:' + format_solution(res['sol']))
+                fh_sol.flush()
 
 
 if __name__ == '__main__':
