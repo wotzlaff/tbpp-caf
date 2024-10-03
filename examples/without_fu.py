@@ -7,7 +7,7 @@ __all__ = ['solve', 'format_result', 'format_header']
 
 def format_header():
     return ','.join([
-        'name', 'v',
+        'name', 'pb', 'db',
         'nv', 'nc', 'nnz',
         'time_model', 'time_solve', 'time_extract',
     ])
@@ -15,7 +15,7 @@ def format_header():
 
 def format_result(res):
     return ','.join([
-        f'{res["name"]},{res["v"]}',
+        f'{res["name"]},{res["v"]},{res["d"]}',
         f'{res["nv"]},{res["nc"]},{res["nnz"]}',
         *(f'{t:.3f}' for t in res['times']),
     ])
@@ -34,9 +34,13 @@ def solve(inst):
 
     # solve integer model
     model.optimize()
-    if model.Status != gp.GRB.OPTIMAL:
+
+    if model.SolCount <= 0:
+        print("No solution")
         return
-    v = round(model.ObjVal)
+    
+    v = model.ObjVal
+    d = model.ObjBoundC
     ts.append(time.time())
 
     # extract solution
@@ -47,6 +51,7 @@ def solve(inst):
     return dict(
         name=inst.name,
         v=v,
+        d=d,
         nv=model.NumVars, nc=model.NumConstrs, nnz=model.NumNZs,
         sol=sol,
         times=[t1 - t0 for t0, t1 in zip(ts, ts[1:])],
