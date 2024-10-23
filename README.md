@@ -50,7 +50,7 @@ Martinovic, J., Strasdat, N., & Selch, M. (2021). Compact integer linear program
 Martinovic, J., Strasdat, N., Valério de Carvalho, J., & Furini, F. (2021). Variable and constraint reduction techniques for the temporal bin packing problem with fire-ups. Optimization Letters, 1-26. <https://doi.org/10.1007/s11590-021-01825-x>
 
 <a id="4">[4]</a>
-Martinovic, J. & Strasdat, N. (2022). Theoretical Insights and a New Class of Valid Inequalities for the Temporal Bin Packing Problem with Fire-Ups. Preprint MATH-NM-01-2022 (available online: <https://optimization-online.org/?p=18679>)
+Martinovic, J. & Strasdat, N. (2024). Theoretical Insights and a New Class of Valid Inequalities for the Temporal Bin Packing Problem with Fire-Ups. Pesquisa Operacional, 44, e283503. <https://doi.org/10.1590/0101-7438.2023.043.00283503>
 
 <a id="5">[5]</a>
-Martinovic, J., Strasdat, N., Valério de Carvalho, J., & Furini, F. (2022). A Combinatorial Flow-based Formulation for Temporal Bin Packing Problems. Preprint MATH-NM-02-2022 (available online: <https://optimization-online.org/?p=20545>)
+Martinovic, J., Strasdat, N., Valério de Carvalho, J., & Furini, F. (2023). A Combinatorial Flow-based Formulation for Temporal Bin Packing Problems. European Journal of Operational Research, Volume 307, Issue 2. <https://doi.org/10.1016/j.ejor.2022.10.012>
