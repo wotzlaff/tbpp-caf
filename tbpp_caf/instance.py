@@ -1,6 +1,7 @@
 import dataclasses
 import os
 from typing import Collection
+from .utils import get_cliques
 
 __all__ = ['Instance']
 
@@ -19,6 +20,10 @@ class Instance:
     @property
     def n(self) -> int:
         return len(self.s)
+    
+    @property
+    def cliques(self) -> list[set[int]]:
+        return get_cliques(self.s, self.e)
 
     def sorted(self):
         s, e, c = [list(t) for t in zip(*sorted(zip(self.s, self.e, self.c)))]
