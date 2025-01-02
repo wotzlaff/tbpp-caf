@@ -1,0 +1,18 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tbpp-caf"
+version = "0.0.1"
+authors = [
+  { name="Nico Strasdat", email="nstrasdat@gmail.com" },
+]
+description = "Combinatorial Arcflow Model for the Temporal Bin Packing Problem with Fire-Ups"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = []
+
+[project.urls]
+Homepage = "https://github.com/wotzlaff/tbpp-caf"
+Issues = "https://github.com/wotzlaff/tbpp-caf/issues"
