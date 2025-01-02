@@ -58,6 +58,9 @@ class Instance:
             print(f'items {items_set} not packed')
         return at_most_once and at_least_once
 
+    def compute_value(self, alloc: Allocation):
+        return len(alloc)
+
     @staticmethod
     def from_file(filename):
         with open(filename) as fh:
