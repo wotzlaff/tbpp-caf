@@ -29,8 +29,8 @@ class Instance:
         s, e, c = [list(t) for t in zip(*sorted(zip(self.s, self.e, self.c)))]
         return Instance(s, e, c, self.cap)
 
-    def is_feasible(self, alloc: Allocation):
-        for pat in alloc:
+    def is_feasible(self, alloc: Allocation, verbose=False):
+        for idx, pat in enumerate(alloc):
             for j in pat:
                 load = sum(
                     self.c[i]
@@ -38,12 +38,24 @@ class Instance:
                     if self.s[i] <= self.s[j] and self.e[i] > self.s[j]
                 )
                 if load > self.cap:
+                    if verbose:
+                        print(f'capacity at {idx} violated: {load} > {self.cap}')
                     return False
-        at_most_once = sum(len(pat) for pat in alloc) == self.n
-        at_least_once = all(
-            any(i in pat for pat in alloc)
-            for i in range(self.n)
-        )
+        # check double packing
+        items_set = set(range(self.n))
+        at_most_once = True
+        for pat in alloc:
+            not_there = pat - items_set
+            if not_there:
+                at_most_once = False
+                if verbose:
+                    print(f'items {not_there} packed more than once')
+                return False
+            items_set -= pat
+        # check actual packing
+        at_least_once = not items_set
+        if verbose and not at_least_once:
+            print(f'items {items_set} not packed')
         return at_most_once and at_least_once
 
     @staticmethod
